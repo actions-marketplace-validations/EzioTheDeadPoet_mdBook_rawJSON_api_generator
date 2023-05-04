@@ -19,11 +19,9 @@ jobs:
       runs-on: ubuntu-latest
       name: Testing functionality
       steps:
-        - name: Checkout
-          uses: actions/checkout@v3
         - name: RUN PSEUDO-API Generator
-          id: mdBook_site_to_JSON
-          uses: ./
+          id: query_generator
+          uses: EzioTheDeadPoet/mdBook_rawJSON_api_generator@1.0
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             mbBook_url: https://rust-lang.github.io/mdBook/
@@ -51,11 +49,9 @@ jobs:
       runs-on: ubuntu-latest
       name: Testing functionality
       steps:
-        - name: Checkout
-          uses: actions/checkout@v3
         - name: Run PSEUDO-API Generator
-          id: mdBook_site_to_JSON
-          uses: ./
+          id: query_generator
+          uses: EzioTheDeadPoet/mdBook_rawJSON_api_generator@1.0
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             mbBook_url: https://rust-lang.github.io/mdBook/
