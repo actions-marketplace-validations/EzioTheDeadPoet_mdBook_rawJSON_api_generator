@@ -1,4 +1,4 @@
-name: 'mdBook to JSON file'
+name: 'mdBook raw.JSON static API Generator'
 description: 'A GitHub Action that takes an mdBook url input and generates an indexed JSON file of all pages.'
 inputs:
   github_token:
