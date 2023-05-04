@@ -19,7 +19,6 @@ inputs:
     required: false
     default: false
 branding:
-  icon: 'file-text'
   color: 'blue'
 runs:
   using: 'composite'
