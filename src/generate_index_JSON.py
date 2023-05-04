@@ -14,17 +14,22 @@ options.add_argument("--headless=new")
 driver = webdriver.Chrome(options=options)
 
 mdBook_url = sys.argv[1]  # URL to mdBook website
-post_queries_json = sys.argv[2]  # raw URL to queries.json Ideally on a POST branch
+post_queries_json = "https://raw.githubusercontent.com/"+sys.argv[2]+"/"+sys.argv[3]+"/queries.json"  # raw URL to queries.json Ideally on a POST branch
 reprocess_cache = False
-if len(sys.argv) > 3:
-    reprocess_cache = sys.argv[3]  # to define if triggered by site deployment
+if len(sys.argv) > 4:
+    reprocess_cache = sys.argv[4]  # to define if triggered by site deployment
 
 
 class Query(dict):
-    def __init__(self, query, cached):
-        dict.__init__(self, query=query, cached=cached)
+    def __init__(self, query, cached=None, empty=None):
+        if empty is None:
+            empty = False
+        if cached is None:
+            cached = False
+        dict.__init__(self, query=query, cached=cached, empty=empty)
         self.cached = cached
         self.query = query
+        self.empty = empty
 
 
 class SearchResult(dict):
@@ -52,33 +57,47 @@ def get_processed_results(query_url):
         paragraph_preview = result.span.get_text()
         process_result = SearchResult(title, result_href, paragraph_preview)
         processed_results.append(process_result)
-    return json.dumps(processed_results, indent=2)
+    return processed_results
 
 
 def generate_query_json(query):
-    query = sys.argv[0].replace("generate_index_JSON.py", "out/queries/" + query)
-    p = Path(os.path.dirname(query))
+    print("Processing Search Query: " + query)
+    query_path = sys.argv[0].replace("generate_index_JSON.py", "out/query/" + query)
+    p = Path(os.path.dirname(query_path))
     p.mkdir(exist_ok=True)
-    with open(query, "w") as outfile:
+    with open(query_path, "w") as outfile:
         query_url = mdBook_url + "?search=" + url_string(query)
-        outfile.write(get_processed_results(query_url))
+        results = get_processed_results(query_url)
+        outfile.write(json.dumps(results, indent=2))
+        print("Done processing Search Query: " + query)
+        return len(results) == 0
 
 
 def process_queries_json():
+    print("Start Processing queries.json")
     queries = requests.get(post_queries_json).json()
+    processed_queries = []
     for query in queries:
-        query_obj = Query(**query)
-        if not query_obj.cached or reprocess_cache:
-            generate_query_json(query_obj.query)
-    return json.dumps(queries, indent=2)
+        query_read = Query(**query)
+        result = True
+        if not query_read.cached or reprocess_cache:
+            result = generate_query_json(query_read.query)
+        processed_queries.append(Query(query_read.query, True, result))
+    print("Done processing queries.json")
+    return json.dumps(processed_queries, indent=2)
 
 
 def start():
+    print("Start Static API generation")
+    if reprocess_cache:
+        print("Reprocessing Cache Mode Active")
     queries = sys.argv[0].replace("generate_index_JSON.py", "out/queries.json")
     p = Path(os.path.dirname(queries))
     p.mkdir(exist_ok=True)
     with open(queries, "w") as outfile:
         outfile.write(process_queries_json())
+    driver.close()
+    print("Exit")
 
 
 start()
