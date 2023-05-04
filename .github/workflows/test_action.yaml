@@ -20,4 +20,4 @@ jobs:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             mbBook_url: https://rust-lang.github.io/mdBook/
             api_repo: ${{ github.repository }}
-            output_branch: POST
+            api_branch: POST
