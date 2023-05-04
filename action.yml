@@ -14,8 +14,8 @@ inputs:
   api_branch:
     description: 'Branch name for the branch that will be housing the json files for the "api".'
     required: true
-    default: "GET"
-  reprocess_cache:
+    default: "API"
+  regenerate_cache:
     description: 'If all queries should be re-processed,cleaning the cache. Should be used when teh mdBook site updated.'
     required: false
     default: false
@@ -48,7 +48,7 @@ runs:
       shell: bash
     - name: Generate raw.JSON mdBook api
       id: index_task
-      run: python src/generate_index_JSON.py ${{ inputs.mbBook_url }} ${{ github.repository }} ${{ inputs.api_branch }} ${{inputs.reprocess_cache}}
+      run: python src/generate_index_JSON.py ${{ inputs.mbBook_url }} ${{ github.repository }} ${{ inputs.api_branch }} ${{inputs.regenerate_cache}}
       shell: bash
     - name: Deploy raw.JSON mdBook api
       uses: peaceiris/actions-gh-pages@v3

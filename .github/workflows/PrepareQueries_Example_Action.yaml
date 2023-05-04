@@ -1,9 +1,5 @@
-name: Test Action
+name: Prepare Queries
 on:
-    push:
-        branches: [ master ]
-    pull_request:
-        branches: [ master ]
     workflow_dispatch:
 
 jobs:
@@ -13,11 +9,11 @@ jobs:
       steps:
         - name: Checkout
           uses: actions/checkout@v3
-        - name: Test RUN of PSEUDO-API Generator
+        - name: RUN PSEUDO-API Generator
           id: mdBook_site_to_JSON
           uses: ./
           with:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             mbBook_url: https://rust-lang.github.io/mdBook/
             api_repo: ${{ github.repository }}
-            api_branch: POST
+            api_branch: API
