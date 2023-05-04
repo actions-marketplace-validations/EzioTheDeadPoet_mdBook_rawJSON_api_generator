@@ -14,7 +14,8 @@ options.add_argument("--headless=new")
 driver = webdriver.Chrome(options=options)
 
 mdBook_url = sys.argv[1]  # URL to mdBook website
-post_queries_json = "https://raw.githubusercontent.com/"+sys.argv[2]+"/"+sys.argv[3]+"/queries.json"  # raw URL to queries.json Ideally on a POST branch
+# raw URL to queries.json Ideally on a POST branch
+post_queries_json = "https://raw.githubusercontent.com/"+sys.argv[2]+"/"+sys.argv[3]+"/queries.json"
 reprocess_cache = False
 if len(sys.argv) > 4:
     reprocess_cache = sys.argv[4]  # to define if triggered by site deployment
