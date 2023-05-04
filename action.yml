@@ -19,6 +19,7 @@ inputs:
     required: false
     default: false
 branding:
+  icon: search
   color: 'blue'
 runs:
   using: 'composite'
