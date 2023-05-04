@@ -8,14 +8,14 @@ inputs:
     description: 'Enter url to mdBook based wiki'
     required: true
     default: "https://rust-lang.github.io/mdBook/"
+  reprocess_cache:
+    description: 'If all queries should be regenerated or not'
+    required: false
+    default: false
   output_branch:
     description: 'branch where the json will be pushed to'
     required: false
-    default: "JSON_Index"
-  output_file:
-    description: 'Enter desired file path'
-    required: false
-    default: "mdBook.json"
+    default: "GET"
 branding:
   icon: 'file-text'
   color: 'blue'
@@ -40,11 +40,11 @@ runs:
       shell: bash
     - name: Index mdBook to JSON
       id: index_task
-      run: python src/generate_index_JSON.py ${{ inputs.mbBook_url }} ${{ inputs.output_file }}
+      run: python src/generate_index_JSON.py ${{ inputs.mbBook_url }} ${{ inputs.queries_json_raw }} ${{inputs.reprocess_cache}}
       shell: bash
     - name: Deploy Data
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.github_token }}
-        publish_dir: ./src/json_index
+        publish_dir: ./src/out
         publish_branch: ${{ inputs.output_branch }}

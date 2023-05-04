@@ -1,0 +1,22 @@
+name: Test Action
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+    workflow_dispatch:
+
+jobs:
+    get-num-square:
+      runs-on: ubuntu-latest
+      name: Testing functionality
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Test RUN of PSEUDO-API Generator
+          id: mdBook_site_to_JSON
+          uses: ./
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            mbBook_url: https://rust-lang.github.io/mdBook/
+            queries_json_raw: https://raw.githubusercontent.com/EzioTheDeadPoet/actions-mdBook-indexer/POST/queries.json
