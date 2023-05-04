@@ -7,16 +7,15 @@ inputs:
   mbBook_url:
     description: 'mdBook based website, that you want to search via an "api"'
     required: true
-    default: "https://rust-lang.github.io/mdBook/"
   api_repo:
     descripion: 'repository housing the "api"'
     required: true
   api_branch:
-    description: 'Branch name for the branch that will be housing the json files for the "api".'
+    description: 'Branch name for the branch that will be housing the json files for the "api". Default = `"API"`'
     required: true
     default: "API"
   regenerate_cache:
-    description: 'If all queries should be re-processed,cleaning the cache. Should be used when teh mdBook site updated.'
+    description: 'Regenerates the whole queries cache when `true`. Should only be used when the mdBook site updated. Default = `false`'
     required: false
     default: false
 branding:
