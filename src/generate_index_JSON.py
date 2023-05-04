@@ -1,6 +1,5 @@
 import os
 import sys
-import requests  # Installed
 import urllib.parse
 import json
 from pathlib import Path
@@ -15,10 +14,10 @@ driver = webdriver.Chrome(options=options)
 
 mdBook_url = sys.argv[1]  # URL to mdBook website
 # raw URL to queries.json Ideally on a POST branch
-post_queries_json = "https://raw.githubusercontent.com/"+sys.argv[2]+"/"+sys.argv[3]+"/queries.json"
+post_queries_json = "./out/queries.json"
 reprocess_cache = False
-if len(sys.argv) > 4:
-    reprocess_cache = sys.argv[4]  # to define if triggered by site deployment
+if len(sys.argv) > 2:
+    reprocess_cache = sys.argv[2]  # to define if triggered by site deployment
 
 
 class Query(dict):
@@ -74,13 +73,13 @@ def generate_query_json(query):
         return len(results) == 0
 
 
-def process_queries_json():
+def process_queries_json(queries_path):
     print("Start Processing queries.json")
-    queries = requests.get(post_queries_json).json()
+    queries = json.loads(open(queries_path, "r").read())
     processed_queries = []
     for query in queries:
         query_read = Query(**query)
-        result = True
+        result = None
         if not query_read.cached or reprocess_cache:
             result = generate_query_json(query_read.query)
         processed_queries.append(Query(query_read.query, True, result))
@@ -92,11 +91,12 @@ def start():
     print("Start Static API generation")
     if reprocess_cache:
         print("Reprocessing Cache Mode Active")
-    queries = sys.argv[0].replace("generate_index_JSON.py", "out/queries.json")
-    p = Path(os.path.dirname(queries))
+    queries_path = sys.argv[0].replace("generate_index_JSON.py", "out/queries.json")
+    queries_json = process_queries_json(queries_path)
+    p = Path(os.path.dirname(queries_path))
     p.mkdir(exist_ok=True)
-    with open(queries, "w") as outfile:
-        outfile.write(process_queries_json())
+    with open(queries_path, "w") as outfile:
+        outfile.write(queries_json)
     driver.close()
     print("Exit")
 
