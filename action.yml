@@ -2,7 +2,7 @@ name: 'mdBook to JSON file'
 description: 'A GitHub Action that takes an mdBook url input and generates an indexed JSON file of all pages.'
 inputs:
   github_token:
-    description: 'Github token required to push the json files to the "api" branch. \n Use ${{ secrets.GITHUB_TOKEN }}'.
+    description: 'Github token required to push the json files to the "api" branch. \n Using "secrets.GITHUB_TOKEN" is recommened.'
     required: true
   mbBook_url:
     description: 'mdBook based website, that you want to search via an "api"'
